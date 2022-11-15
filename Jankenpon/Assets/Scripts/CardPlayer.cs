@@ -6,11 +6,12 @@ using DG.Tweening;
 using UnityEngine.UI;
 using TMPro;
 
-public class Player : MonoBehaviour
+public class CardPlayer : MonoBehaviour
 {
     public Transform atkPoskRef;
     public Card choosenCard;
     public HealthBar healthBar;
+    public TMP_Text NickName;
     public TMP_Text healthText;
     public float Health;
     public float MaxHealth;
