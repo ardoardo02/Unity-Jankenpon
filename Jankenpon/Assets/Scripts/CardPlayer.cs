@@ -15,12 +15,16 @@ public class CardPlayer : MonoBehaviour
     public TMP_Text healthText;
     public float Health;
     public float MaxHealth;
+    public Card[] cards;
+    public bool alwaysShowCards;
 
     private Tweener animationTween;
 
     public void Start()
     {
         Health = MaxHealth;
+        if(!alwaysShowCards)
+            HideCards();
     }
 
     public Attack? AttackValue
@@ -36,6 +40,9 @@ public class CardPlayer : MonoBehaviour
         }
 
         choosenCard = null;
+
+        if(!alwaysShowCards)
+            HideCards();
     }
 
     public void SetChoosenCard(Card newCard)
@@ -46,7 +53,8 @@ public class CardPlayer : MonoBehaviour
         }
 
         choosenCard = newCard;
-        choosenCard.transform.DOScale(choosenCard.transform.localScale * 1.2f, 0.2f);
+        if(alwaysShowCards)
+            choosenCard.transform.DOScale(choosenCard.transform.localScale * 1.2f, 0.2f);
     }
 
     public void ChangeHealth(float amount)
@@ -64,6 +72,8 @@ public class CardPlayer : MonoBehaviour
     public void AnimateAttack()
     {
         animationTween = choosenCard.transform.DOMove(atkPoskRef.position, 1);
+        if(!alwaysShowCards)
+            ShowCards();
     }
 
     public void AnimateDraw()
@@ -94,6 +104,28 @@ public class CardPlayer : MonoBehaviour
         foreach (var card in cards)
         {
             card.SetClickable(value);
+        }
+    }
+    
+    public void HideCards()
+    {
+        if(alwaysShowCards)
+            return;
+        
+        foreach (var card in cards)
+        {
+            card.Hide();
+        }
+    }
+
+    public void ShowCards()
+    {
+        if(alwaysShowCards)
+            return;
+        
+        foreach (var card in cards)
+        {
+            card.Show();
         }
     }
 }

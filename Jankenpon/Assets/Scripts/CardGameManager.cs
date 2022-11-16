@@ -6,21 +6,24 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using DG.Tweening;
 
 public class CardGameManager : MonoBehaviour, IOnEventCallback
 {
     public GameObject netPlayerPrefab;
     public CardPlayer P1;
     public CardPlayer P2;
-    public float restoreValue = 5;
-    public float damageValue = 15;
+    public int restoreValue = 5;
+    public int damageValue = 15;
     public GameState State, NextState = GameState.NetPlayersInit;
     public GameObject gameOverPanel;
+    public Transform bgImage;
     public TMP_Text winnerText;
     public TMP_Text pingText;
 
     private CardPlayer damagedPlayer;
     private CardPlayer winner;
+    [SerializeField] private AudioManager audioManager;
     [SerializeField] private bool online;
 
     public List<int> syncReadyPlayers = new List<int>(2);
@@ -104,14 +107,18 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
             case GameState.Damages:
                 if (P1.IsAnimating() == false && P2.IsAnimating() == false)
                 {
+                    bgImage.DOShakePosition(0.5f, 100, 100, 90, true);
+
                     // Hitung darah
                     if (damagedPlayer == P1)
                     {
+                        audioManager.PlaySlashed();
                         P1.ChangeHealth(-damageValue);
                         P2.ChangeHealth(restoreValue);
                     }
                     else
                     {
+                        audioManager.PlayAttack();
                         P1.ChangeHealth(restoreValue);
                         P2.ChangeHealth(-damageValue);
                     }
@@ -127,6 +134,11 @@ public class CardGameManager : MonoBehaviour, IOnEventCallback
                     }
                     else
                     {
+                        if(winner == P1)
+                            audioManager.PlayWin();
+                        else
+                            audioManager.PlayLose();
+
                         gameOverPanel.SetActive(true);
                         winnerText.text = winner == P1 ? $"{P1.NickName.text} is win!" : $"{P2.NickName.text} is win!";
                         ResetPlayers();

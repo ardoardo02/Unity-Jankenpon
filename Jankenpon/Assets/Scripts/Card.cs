@@ -7,9 +7,13 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
+    public Image image;
+    public Sprite hideSprite;
+    public Sprite sprite;
     public Attack AttackValue;
     public CardPlayer player;
     public Vector2 OriginalPosition;
+    public AudioManager audioManager;
     Vector3 originalScale;
     Color originalColor;
 
@@ -24,8 +28,10 @@ public class Card : MonoBehaviour
 
     public void OnClick()
     {
-        if (isClickable)
+        if (isClickable){
+            audioManager.PlayChooseCard();
             player.SetChoosenCard(this);
+        }
     }
 
     public void Reset()
@@ -38,6 +44,16 @@ public class Card : MonoBehaviour
     public void SetClickable(bool value)
     {
         isClickable = value;
+    }
+
+    public void Show()
+    {
+        image.sprite = sprite;
+    }
+
+    public void Hide()
+    {
+        image.sprite = hideSprite;
     }
 
 

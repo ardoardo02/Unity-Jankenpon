@@ -50,6 +50,21 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public void ClickLeaveRoom()
+    {
+        StartCoroutine(BackToLobbyCR());
+    }
+
+    IEnumerator BackToLobbyCR()
+    {
+        PhotonNetwork.LeaveRoom();
+        while(PhotonNetwork.InRoom || PhotonNetwork.IsConnectedAndReady == false)
+            yield return null;
+        
+        PhotonNetwork.JoinLobby();
+        roomPanel.SetActive(false);
+    }
+
     public void JoinRoom(string roomName){
         PhotonNetwork.JoinRoom(roomName);
     }
@@ -146,7 +161,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         foreach (var roomInfo in roomInfoList)
         {
-            if(roomInfo.MaxPlayers == 0)
+            if(roomInfo.MaxPlayers == 0 || roomInfo.IsVisible == false)
                 continue;
 
             RoomItem newRoomItem = Instantiate(roomItemPrefab, roomListObject.transform);

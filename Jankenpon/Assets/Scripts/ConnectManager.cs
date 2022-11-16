@@ -14,6 +14,11 @@ public class ConnectManager : MonoBehaviourPunCallbacks
         feedbackText.text = "";
     }
 
+    public void ClickQuit()
+    {
+        Application.Quit();
+    }
+
     public void ClickConnect()
     {
         feedbackText.text = "";
